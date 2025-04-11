@@ -4,7 +4,7 @@ import { createUserSchema } from "../types/request/user.schema";
 import { User } from "../types/user.dto";
 import bcrypt from "bcrypt";
 import userModel from "../models/user.model";
-import { buildSuccessRes } from "../utils/response";
+import { buildBadRequestResponse, buildSuccessRes } from "../utils/response";
 
 export class UserService {
   private readonly USER_COLLECTION = "Users";
@@ -14,6 +14,12 @@ export class UserService {
     await validateRequestData(req.body, createUserSchema);
 
     const { name, email, password, interests, languages } = req.body as User;
+
+    const existingUser = await userModel.find({ email : email })
+
+    if (existingUser) {
+        return buildBadRequestResponse("User with existing email is found. Failed to create duplicate user")
+    }
 
     let createdUser = null;
 
