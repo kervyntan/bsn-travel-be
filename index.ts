@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express, { Express } from "express";
 
 import Routes from "./controllers/index.controller";
+import mongoose from "mongoose";
 
 dotenv.config();
 
@@ -12,6 +13,14 @@ app.use(express.json());
 
 app.use("/api", Routes);
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`);
+app.listen(port, async () => {
+  try {
+    mongoose
+      .connect(process.env.MONGO_URI!)
+      .then(() => console.log("Connected to MongoDB"))
+      .catch((error) => console.error("Connection error", error));
+    console.log(`[server]: Server is running at http://localhost:${port}`);
+  } catch (e) {
+    console.error(e);
+  }
 });
