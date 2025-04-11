@@ -5,6 +5,10 @@ const router = Router();
 
 const userService = new UserService();
 
-router.post("/create-user", async (req: Request, res: Response) => {});
+router.post("/create-user", async (req: Request, res: Response) => {
+  const response = await userService.createUser(req);
+
+  res.json(response);
+});
 
 export default router;

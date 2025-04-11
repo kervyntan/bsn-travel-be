@@ -15,11 +15,21 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const index_controller_1 = __importDefault(require("./controllers/index.controller"));
+const mongoose_1 = __importDefault(require("mongoose"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use(express_1.default.json());
 app.use("/api", index_controller_1.default);
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
+    try {
+        mongoose_1.default
+            .connect(process.env.MONGO_URI)
+            .then(() => console.log("Connected to MongoDB"))
+            .catch((error) => console.error("Connection error", error));
+        console.log(`[server]: Server is running at http://localhost:${port}`);
+    }
+    catch (e) {
+        console.error(e);
+    }
 }));

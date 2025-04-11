@@ -1,0 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.STATUS_CODE_NOT_FOUND = exports.STATUS_CODE_INTERNAL_SERVER_ERROR = exports.STATUS_CODE_UNAUTHORIZED = exports.STATUS_CODE_BAD_REQUEST = exports.STATUS_CODE_SUCCESS = void 0;
+exports.STATUS_CODE_SUCCESS = 200;
+exports.STATUS_CODE_BAD_REQUEST = 400;
+exports.STATUS_CODE_UNAUTHORIZED = 403;
+exports.STATUS_CODE_INTERNAL_SERVER_ERROR = 500;
+exports.STATUS_CODE_NOT_FOUND = 404;

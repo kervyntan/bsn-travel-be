@@ -9,12 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const user_service_1 = require("../services/user.service");
-const router = (0, express_1.Router)();
-const userService = new user_service_1.UserService();
-router.post("/create-user", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield userService.createUser(req);
-    res.json(response);
-}));
-exports.default = router;
+exports.validateRequestData = validateRequestData;
+const errors_1 = require("../errors/errors");
+function validateRequestData(data, schema) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const validData = yield schema.validate(data, { abortEarly: false });
+            return validData;
+        }
+        catch (error) {
+            throw new errors_1.InvalidArgumentsError(`Invalid request data: ${error}`);
+        }
+    });
+}
