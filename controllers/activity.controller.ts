@@ -10,4 +10,9 @@ router.post("/insert-dummy-data", async (req: Request, res: Response) => {
   res.json({ result: "ok" });
 });
 
+router.get("/", async (req: Request, res: Response) => {
+  const response = await activityService.getAllActivities();
+  res.json(response);
+});
+
 export default router;
