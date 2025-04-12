@@ -14,6 +14,10 @@ const itinerarySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+  },
+  members: [Schema.Types.ObjectId],
   activities: [activitySchema],
 });
 

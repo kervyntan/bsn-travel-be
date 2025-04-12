@@ -27,6 +27,12 @@ app.use((0, cors_1.default)({
     allowedHeaders: ["Content-Type", "Authorization"],
 }));
 app.use("/api", index_controller_1.default);
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    next();
+});
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         mongoose_1.default

@@ -1,10 +1,13 @@
+import { ObjectId } from "mongodb";
+
 export type ActivityType = "ACCOMODATION" | "FLIGHT" | "ACTIVITY";
 
 export interface Activity {
-  _id?: string;
+  _id?: ObjectId;
   imageUrl: string;
   description: string;
   title: string;
   bestForHowManyPeople: number;
+  createdBy: ObjectId; // userId
   type: ActivityType;
 }

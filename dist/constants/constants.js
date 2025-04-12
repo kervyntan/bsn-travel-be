@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.DUMMY_ACTIVITIES = exports.STATUS_CODE_NOT_FOUND = exports.STATUS_CODE_INTERNAL_SERVER_ERROR = exports.STATUS_CODE_UNAUTHORIZED = exports.STATUS_CODE_BAD_REQUEST = exports.STATUS_CODE_SUCCESS = void 0;
+exports.DUMMY_ITINERARIES = exports.DUMMY_ACTIVITIES = exports.STATUS_CODE_NOT_FOUND = exports.STATUS_CODE_INTERNAL_SERVER_ERROR = exports.STATUS_CODE_UNAUTHORIZED = exports.STATUS_CODE_BAD_REQUEST = exports.STATUS_CODE_SUCCESS = void 0;
+const mongodb_1 = require("mongodb");
 exports.STATUS_CODE_SUCCESS = 200;
 exports.STATUS_CODE_BAD_REQUEST = 400;
 exports.STATUS_CODE_UNAUTHORIZED = 403;
@@ -12,6 +13,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Explore scenic mountain trails with a guided hike.",
         title: "Mountain Hiking Adventure",
         bestForHowManyPeople: 4,
+        createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
         type: "ACTIVITY",
     },
     {
@@ -19,6 +21,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Cozy lakeside cottage perfect for a peaceful getaway.",
         title: "Lakeside Cottage Retreat",
         bestForHowManyPeople: 2,
+        createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
         type: "ACCOMODATION",
     },
     {
@@ -26,6 +29,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Dive into clear waters and discover marine life.",
         title: "Scuba Diving Experience",
         bestForHowManyPeople: 6,
+        createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
         type: "ACTIVITY",
     },
     {
@@ -33,6 +37,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Modern hotel in the heart of the city with great amenities.",
         title: "Downtown City Hotel",
         bestForHowManyPeople: 2,
+        createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
         type: "ACCOMODATION",
     },
     {
@@ -40,6 +45,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Soar through the skies with tandem paragliding.",
         title: "Tandem Paragliding",
         bestForHowManyPeople: 1,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "ACTIVITY",
     },
     {
@@ -47,6 +53,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Round-trip flight to Bali with in-flight meals and entertainment.",
         title: "Flight to Bali",
         bestForHowManyPeople: 1,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "FLIGHT",
     },
     {
@@ -54,6 +61,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "A unique glamping experience under the stars.",
         title: "Luxury Glamping Tent",
         bestForHowManyPeople: 3,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "ACCOMODATION",
     },
     {
@@ -61,6 +69,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Paddle through beautiful coastlines with a group tour.",
         title: "Guided Sea Kayaking",
         bestForHowManyPeople: 5,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "ACTIVITY",
     },
     {
@@ -68,6 +77,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Affordable direct flight to New York City.",
         title: "Flight to NYC",
         bestForHowManyPeople: 1,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "FLIGHT",
     },
     {
@@ -75,6 +85,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "Learn to surf with professionals on a sunny beach.",
         title: "Beginner Surf Lessons",
         bestForHowManyPeople: 4,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "ACTIVITY",
     },
     {
@@ -82,6 +93,7 @@ exports.DUMMY_ACTIVITIES = [
         description: "All-inclusive resort stay with ocean views.",
         title: "Beachfront Resort",
         bestForHowManyPeople: 2,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "ACCOMODATION",
     },
     {
@@ -89,6 +101,90 @@ exports.DUMMY_ACTIVITIES = [
         description: "Luxury flight to Paris with first-class service.",
         title: "First-Class Flight to Paris",
         bestForHowManyPeople: 1,
+        createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
         type: "FLIGHT",
+    },
+];
+exports.DUMMY_ITINERARIES = [
+    {
+        name: "Mountain Adventure",
+        description: "Explore scenic mountain trails with a guided hike.",
+        imageUrl: "https://images.pexels.com/photos/712618/pexels-photo-712618.jpeg",
+        activities: [
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fb3"),
+                imageUrl: "https://images.pexels.com/photos/712618/pexels-photo-712618.jpeg",
+                description: "Explore scenic mountain trails with a guided hike.",
+                title: "Mountain Hiking Adventure",
+                bestForHowManyPeople: 4,
+                createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
+                type: "ACTIVITY",
+            },
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fbb"),
+                imageUrl: "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+                description: "Affordable direct flight to New York City.",
+                title: "Flight to NYC",
+                bestForHowManyPeople: 1,
+                createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
+                type: "FLIGHT",
+            },
+        ],
+        createdBy: new mongodb_1.ObjectId("67f9d7d1b0afbbd15618ed4e"),
+        members: [new mongodb_1.ObjectId("67f9d7d1b0afbbd15618ed4e")],
+    },
+    {
+        name: "Lakeside Getaway",
+        description: "Cozy lakeside cottage perfect for a peaceful getaway.",
+        imageUrl: "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+        activities: [
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fbd"),
+                imageUrl: "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg",
+                description: "All-inclusive resort stay with ocean views.",
+                title: "Beachfront Resort",
+                bestForHowManyPeople: 2,
+                createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
+                type: "ACCOMODATION",
+            },
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fbb"),
+                imageUrl: "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+                description: "Affordable direct flight to New York City.",
+                title: "Flight to NYC",
+                bestForHowManyPeople: 1,
+                createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
+                type: "FLIGHT",
+            },
+        ],
+        createdBy: new mongodb_1.ObjectId("67f9d7d1b0afbbd15618ed4e"),
+        members: [new mongodb_1.ObjectId("67f9d7d1b0afbbd15618ed4e")],
+    },
+    {
+        name: "Scuba Diving Escape",
+        description: "Dive into clear waters and discover marine life.",
+        imageUrl: "https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg",
+        activities: [
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fb5"),
+                imageUrl: "https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg",
+                description: "Dive into clear waters and discover marine life.",
+                title: "Scuba Diving Experience",
+                bestForHowManyPeople: 6,
+                createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
+                type: "ACTIVITY",
+            },
+            {
+                _id: new mongodb_1.ObjectId("67fa5846dde18467c5662fbb"),
+                imageUrl: "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+                description: "Affordable direct flight to New York City.",
+                title: "Flight to NYC",
+                bestForHowManyPeople: 1,
+                createdBy: new mongodb_1.ObjectId("67f9d4a7b0afbbd15618ed4b"),
+                type: "FLIGHT",
+            },
+        ],
+        createdBy: new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e"),
+        members: [new mongodb_1.ObjectId("67f93a7ef1c6e4eba42f339e")],
     },
 ];
