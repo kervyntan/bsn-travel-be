@@ -11,4 +11,10 @@ router.post("/create-user", async (req: Request, res: Response) => {
   res.json(response);
 });
 
+router.post("/login", async (req: Request, res: Response) => {
+  const response = await userService.login(req);
+
+  res.json(response);
+});
+
 export default router;

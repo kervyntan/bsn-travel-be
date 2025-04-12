@@ -1,10 +1,14 @@
 import { Request } from "express";
 import { validateRequestData } from "../utils/request-validation";
-import { createUserSchema } from "../types/request/user.schema";
+import { createUserSchema, loginSchema } from "../types/request/user.schema";
 import { User } from "../types/user.dto";
 import bcrypt from "bcrypt";
 import userModel from "../models/user.model";
-import { buildBadRequestResponse, buildSuccessRes } from "../utils/response";
+import {
+  buildBadRequestResponse,
+  buildSuccessRes,
+  buildUnauthenticatedResponse,
+} from "../utils/response";
 
 export class UserService {
   private readonly USER_COLLECTION = "Users";
@@ -45,5 +49,42 @@ export class UserService {
         });
       });
     });
+  }
+
+  async login(req: Request) {
+    await validateRequestData(req.body, loginSchema);
+
+    // Very simple login
+    // No Auth
+
+    const { email, password } = req.body as User;
+
+    const existingUser = await userModel.findOne({ email: email }).exec();
+
+    if (!existingUser?.id) {
+      return buildBadRequestResponse(
+        "No existing user is found. Failed to login"
+      );
+    }
+
+    bcrypt.compare(
+      password,
+      existingUser?.password as string,
+      (err, result) => {
+        if (err) {
+          // Handle error
+          console.error("Error comparing passwords:", err);
+          return;
+        }
+
+        if (result) {
+          console.log("Passwords match! User authenticated.");
+          return buildSuccessRes("Login successful!", existingUser);
+        } else {
+          console.log("Passwords do not match! Authentication failed.");
+          return buildUnauthenticatedResponse("Incorrect password/email");
+        }
+      }
+    );
   }
 }
