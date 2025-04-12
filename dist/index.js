@@ -16,10 +16,16 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const express_1 = __importDefault(require("express"));
 const index_controller_1 = __importDefault(require("./controllers/index.controller"));
 const mongoose_1 = __importDefault(require("mongoose"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const port = process.env.PORT || 3000;
 app.use(express_1.default.json());
+app.use((0, cors_1.default)({
+    origin: ["https://bsn-travel-fe.vercel.app", "http://localhost:3000"],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use("/api", index_controller_1.default);
 app.listen(port, () => __awaiter(void 0, void 0, void 0, function* () {
     try {

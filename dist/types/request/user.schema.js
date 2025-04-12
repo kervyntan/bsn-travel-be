@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createUserSchema = void 0;
+exports.loginSchema = exports.createUserSchema = void 0;
 const yup = __importStar(require("yup"));
 exports.createUserSchema = yup.object({
     email: yup.string().email().required(),
@@ -41,4 +41,8 @@ exports.createUserSchema = yup.object({
     name: yup.string().required(),
     languages: yup.array(yup.string()).required(),
     interests: yup.array(yup.string()).required(),
+});
+exports.loginSchema = yup.object({
+    email: yup.string().email().required(),
+    password: yup.string().min(1).required(),
 });

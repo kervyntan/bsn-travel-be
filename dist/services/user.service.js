@@ -20,13 +20,16 @@ const user_model_1 = __importDefault(require("../models/user.model"));
 const response_1 = require("../utils/response");
 class UserService {
     constructor() {
-        this.USER_COLLECTION = "Users";
         this.SALT_ROUNDS = 10;
     }
     createUser(req) {
         return __awaiter(this, void 0, void 0, function* () {
             yield (0, request_validation_1.validateRequestData)(req.body, user_schema_1.createUserSchema);
             const { name, email, password, interests, languages } = req.body;
+            const existingUser = yield user_model_1.default.find({ email: email }).exec();
+            if (existingUser.length > 0) {
+                return (0, response_1.buildBadRequestResponse)("User with existing email is found. Failed to create duplicate user");
+            }
             let createdUser = null;
             bcrypt_1.default.genSalt(this.SALT_ROUNDS, (err, salt) => {
                 if (err) {
@@ -40,9 +43,36 @@ class UserService {
                     }
                     console.log("Hashed password:", hash);
                     createdUser = yield user_model_1.default.create(Object.assign(Object.assign({}, req.body), { password: hash }));
+                    return (0, response_1.buildSuccessRes)("User is successfully created", Object.assign(Object.assign({}, req.body), { password: hash }));
                 }));
             });
-            return (0, response_1.buildSuccessRes)("User is successfully created", createdUser);
+        });
+    }
+    login(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield (0, request_validation_1.validateRequestData)(req.body, user_schema_1.loginSchema);
+            // Very simple login
+            // No Auth
+            const { email, password } = req.body;
+            const existingUser = yield user_model_1.default.findOne({ email: email }).exec();
+            if (!(existingUser === null || existingUser === void 0 ? void 0 : existingUser.id)) {
+                return (0, response_1.buildBadRequestResponse)("No existing user is found. Failed to login");
+            }
+            bcrypt_1.default.compare(password, existingUser === null || existingUser === void 0 ? void 0 : existingUser.password, (err, result) => {
+                if (err) {
+                    // Handle error
+                    console.error("Error comparing passwords:", err);
+                    return;
+                }
+                if (result) {
+                    console.log("Passwords match! User authenticated.");
+                    return (0, response_1.buildSuccessRes)("Login successful!", existingUser);
+                }
+                else {
+                    console.log("Passwords do not match! Authentication failed.");
+                    return (0, response_1.buildUnauthenticatedResponse)("Incorrect password/email");
+                }
+            });
         });
     }
 }

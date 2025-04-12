@@ -17,4 +17,8 @@ router.post("/create-user", (req, res) => __awaiter(void 0, void 0, void 0, func
     const response = yield userService.createUser(req);
     res.json(response);
 }));
+router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield userService.login(req);
+    res.json(response);
+}));
 exports.default = router;
