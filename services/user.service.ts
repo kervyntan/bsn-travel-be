@@ -11,7 +11,6 @@ import {
 } from "../utils/response";
 
 export class UserService {
-  private readonly USER_COLLECTION = "Users";
   private readonly SALT_ROUNDS = 10;
 
   async createUser(req: Request) {
