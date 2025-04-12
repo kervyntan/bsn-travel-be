@@ -4,6 +4,7 @@ import { User } from "./user.dto";
 
 export interface Itinerary {
   _id?: string;
+  _doc?: object;
   imageUrl: string;
   description: string;
   name: string;
@@ -13,11 +14,11 @@ export interface Itinerary {
 }
 
 export interface ItineraryDto {
-    _id?: string;
-    imageUrl: string;
-    description: string;
-    name: string;
-    createdBy: User | null; // userId
-    members: User[]; // List of userIds
-    activities: Activity[];
+  _id?: string;
+  imageUrl: string;
+  description: string;
+  name: string;
+  createdBy: User | null; // userId
+  members: User[]; // List of userIds
+  activities: Activity[];
 }

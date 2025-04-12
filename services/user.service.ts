@@ -9,9 +9,12 @@ import {
   buildSuccessRes,
   buildUnauthenticatedResponse,
 } from "../utils/response";
+import { ObjectId } from "mongodb";
 
 export class UserService {
   private readonly SALT_ROUNDS = 10;
+  private readonly DEFAULT_PROFILE_PIC =
+    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere.png";
 
   async createUser(req: Request) {
     await validateRequestData(req.body, createUserSchema);
@@ -41,9 +44,20 @@ export class UserService {
         }
 
         console.log("Hashed password:", hash);
-        createdUser = await userModel.create({ ...req.body, password: hash });
+        createdUser = await userModel.create({
+          ...req.body,
+          imageUrl: this.DEFAULT_PROFILE_PIC,
+          password: hash,
+        });
+        console.log("user is created: ", {
+          ...req.body,
+          imageUrl: this.DEFAULT_PROFILE_PIC,
+          password: hash,
+        });
+
         return buildSuccessRes("User is successfully created", {
           ...req.body,
+          imageUrl: this.DEFAULT_PROFILE_PIC,
           password: hash,
         });
       });
@@ -66,24 +80,27 @@ export class UserService {
       );
     }
 
-    bcrypt.compare(
+    const isMatch = await bcrypt.compare(
       password,
-      existingUser?.password as string,
-      (err, result) => {
-        if (err) {
-          // Handle error
-          console.error("Error comparing passwords:", err);
-          return;
-        }
-
-        if (result) {
-          console.log("Passwords match! User authenticated.");
-          return buildSuccessRes("Login successful!", existingUser);
-        } else {
-          console.log("Passwords do not match! Authentication failed.");
-          return buildUnauthenticatedResponse("Incorrect password/email");
-        }
-      }
+      existingUser.password as string
     );
+
+    if (isMatch) {
+      console.log("Passwords match! User authenticated.");
+      return buildSuccessRes("Login successful!", existingUser);
+    } else {
+      console.log("Passwords do not match! Authentication failed.");
+      return buildUnauthenticatedResponse("Incorrect password/email");
+    }
+  }
+
+  async getAllUsersExceptCurrent(req: Request) {
+    const { id } = req.params;
+
+    const users = await userModel.find({
+      _id: { $nin: [new ObjectId(id)] },
+    });
+
+    return buildSuccessRes("Users successfully fetched", users);
   }
 }

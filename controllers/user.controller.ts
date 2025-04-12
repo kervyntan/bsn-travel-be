@@ -17,4 +17,10 @@ router.post("/login", async (req: Request, res: Response) => {
   res.json(response);
 });
 
+router.get("/except/:id", async (req: Request, res: Response) => {
+  const response = await userService.getAllUsersExceptCurrent(req);
+
+  res.json(response);
+});
+
 export default router;
