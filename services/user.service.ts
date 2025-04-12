@@ -15,10 +15,12 @@ export class UserService {
 
     const { name, email, password, interests, languages } = req.body as User;
 
-    const existingUser = await userModel.find({ email : email })
+    const existingUser = await userModel.find({ email: email }).exec();
 
-    if (existingUser) {
-        return buildBadRequestResponse("User with existing email is found. Failed to create duplicate user")
+    if (existingUser.length > 0) {
+      return buildBadRequestResponse(
+        "User with existing email is found. Failed to create duplicate user"
+      );
     }
 
     let createdUser = null;
@@ -37,9 +39,11 @@ export class UserService {
 
         console.log("Hashed password:", hash);
         createdUser = await userModel.create({ ...req.body, password: hash });
+        return buildSuccessRes("User is successfully created", {
+          ...req.body,
+          password: hash,
+        });
       });
     });
-
-    return buildSuccessRes("User is successfully created", createdUser);
   }
 }
