@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Activity } from "../types/activity.dto";
 
-const activitySchema = new mongoose.Schema<Activity>({
+export const activitySchema = new mongoose.Schema<Activity>({
   imageUrl: {
     type: String,
     required: true,

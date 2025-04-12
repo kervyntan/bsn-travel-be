@@ -10,6 +10,11 @@ router.post("/insert-dummy-data", async (req: Request, res: Response) => {
   res.json({ result: "ok" });
 });
 
+router.get("/:id", async (req: Request, res: Response) => {
+  const response = await activityService.getActivity(req);
+  res.json(response);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   const response = await activityService.getAllActivities();
   res.json(response);

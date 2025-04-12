@@ -1,4 +1,5 @@
 import { Activity } from "../types/activity.dto";
+import { Itinerary } from "../types/itinerary.dto";
 
 export const STATUS_CODE_SUCCESS = 200;
 export const STATUS_CODE_BAD_REQUEST = 400;
@@ -103,5 +104,80 @@ export const DUMMY_ACTIVITIES: Activity[] = [
     title: "First-Class Flight to Paris",
     bestForHowManyPeople: 1,
     type: "FLIGHT",
+  },
+];
+
+export const DUMMY_ITINERARIES: Itinerary[] = [
+  {
+    name: "Mountain Adventure",
+    description: "Explore scenic mountain trails with a guided hike.",
+    imageUrl:
+      "https://images.pexels.com/photos/712618/pexels-photo-712618.jpeg",
+    activities: [
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/712618/pexels-photo-712618.jpeg",
+        description: "Explore scenic mountain trails with a guided hike.",
+        title: "Mountain Hiking Adventure",
+        bestForHowManyPeople: 4,
+        type: "ACTIVITY",
+      },
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+        description: "Affordable direct flight to New York City.",
+        title: "Flight to NYC",
+        bestForHowManyPeople: 1,
+        type: "FLIGHT",
+      },
+    ],
+  },
+  {
+    name: "Lakeside Getaway",
+    description: "Cozy lakeside cottage perfect for a peaceful getaway.",
+    imageUrl:
+      "https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg",
+    activities: [
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg",
+        description: "All-inclusive resort stay with ocean views.",
+        title: "Beachfront Resort",
+        bestForHowManyPeople: 2,
+        type: "ACCOMODATION",
+      },
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+        description: "Affordable direct flight to New York City.",
+        title: "Flight to NYC",
+        bestForHowManyPeople: 1,
+        type: "FLIGHT",
+      },
+    ],
+  },
+  {
+    name: "Scuba Diving Escape",
+    description: "Dive into clear waters and discover marine life.",
+    imageUrl:
+      "https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg",
+    activities: [
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/189349/pexels-photo-189349.jpeg",
+        description: "Dive into clear waters and discover marine life.",
+        title: "Scuba Diving Experience",
+        bestForHowManyPeople: 6,
+        type: "ACTIVITY",
+      },
+      {
+        imageUrl:
+          "https://images.pexels.com/photos/358319/pexels-photo-358319.jpeg",
+        description: "Affordable direct flight to New York City.",
+        title: "Flight to NYC",
+        bestForHowManyPeople: 1,
+        type: "FLIGHT",
+      },
+    ],
   },
 ];
