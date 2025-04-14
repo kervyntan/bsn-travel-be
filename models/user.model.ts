@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { InterestsEnum, LanguagesEnum } from "../enums/enums";
 
 const userSchema = new mongoose.Schema({
@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema({
     default: [],
     required: true,
   },
+  connections: [Schema.Types.ObjectId],
 });
 
 const userModel = mongoose.model("Users", userSchema);

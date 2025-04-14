@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { validateRequestData } from "../utils/request-validation";
 import { createUserSchema, loginSchema } from "../types/request/user.schema";
-import { User } from "../types/user.dto";
+import { User, UserDto } from "../types/user.dto";
 import bcrypt from "bcrypt";
 import userModel from "../models/user.model";
 import {
@@ -72,9 +72,9 @@ export class UserService {
 
     const { email, password } = req.body as User;
 
-    const existingUser = await userModel.findOne({ email: email }).exec();
+    const existingUser = await userModel.findOne<User>({ email: email });
 
-    if (!existingUser?.id) {
+    if (!existingUser?._id) {
       return buildBadRequestResponse(
         "No existing user is found. Failed to login"
       );
@@ -87,7 +87,19 @@ export class UserService {
 
     if (isMatch) {
       console.log("Passwords match! User authenticated.");
-      return buildSuccessRes("Login successful!", existingUser);
+      const connectionIds = existingUser.connections.map(
+        (connection) => new ObjectId(connection)
+      );
+
+      const userDto = { ...existingUser["_doc"], connections: [] as User[] };
+
+      const users = await userModel.find<User>({
+        _id: { $in: connectionIds },
+      });
+
+      userDto.connections = users;
+
+      return buildSuccessRes("Login successful!", userDto);
     } else {
       console.log("Passwords do not match! Authentication failed.");
       return buildUnauthenticatedResponse("Incorrect password/email");
@@ -102,5 +114,29 @@ export class UserService {
     });
 
     return buildSuccessRes("Users successfully fetched", users);
+  }
+
+  async connectWithUser(req: Request) {
+    const { originalId, connectWithId } = req.query;
+
+    const originalUser = await userModel.findOne<User>({ id: originalId });
+
+    const userToConnect = await userModel.findOne<User>({ id: connectWithId });
+
+    if (!originalUser || !userToConnect) {
+      return buildBadRequestResponse(
+        "User with OriginalId/ConnectwithId can't be found."
+      );
+    }
+
+    const originalUserData = { ...originalUser!["_doc"] } as User;
+
+    const connectWithUserData = { ...userToConnect!["_doc"] } as User;
+
+    originalUserData.connections.push(new ObjectId(connectWithId as string));
+    connectWithUserData.connections.push(new ObjectId(connectWithId as string));
+
+    await userModel.updateOne({ id: originalId }, originalUserData);
+    await userModel.updateOne({ id: connectWithId }, connectWithUserData);
   }
 }

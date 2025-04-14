@@ -21,4 +21,8 @@ router.post("/login", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const response = yield userService.login(req);
     res.json(response);
 }));
+router.get("/except/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield userService.getAllUsersExceptCurrent(req);
+    res.json(response);
+}));
 exports.default = router;

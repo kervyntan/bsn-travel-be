@@ -18,9 +18,11 @@ const user_schema_1 = require("../types/request/user.schema");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_model_1 = __importDefault(require("../models/user.model"));
 const response_1 = require("../utils/response");
+const mongodb_1 = require("mongodb");
 class UserService {
     constructor() {
         this.SALT_ROUNDS = 10;
+        this.DEFAULT_PROFILE_PIC = "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere.png";
     }
     createUser(req) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -42,8 +44,9 @@ class UserService {
                         return;
                     }
                     console.log("Hashed password:", hash);
-                    createdUser = yield user_model_1.default.create(Object.assign(Object.assign({}, req.body), { password: hash }));
-                    return (0, response_1.buildSuccessRes)("User is successfully created", Object.assign(Object.assign({}, req.body), { password: hash }));
+                    createdUser = yield user_model_1.default.create(Object.assign(Object.assign({}, req.body), { imageUrl: this.DEFAULT_PROFILE_PIC, password: hash }));
+                    console.log("user is created: ", Object.assign(Object.assign({}, req.body), { imageUrl: this.DEFAULT_PROFILE_PIC, password: hash }));
+                    return (0, response_1.buildSuccessRes)("User is successfully created", Object.assign(Object.assign({}, req.body), { imageUrl: this.DEFAULT_PROFILE_PIC, password: hash }));
                 }));
             });
         });
@@ -58,21 +61,24 @@ class UserService {
             if (!(existingUser === null || existingUser === void 0 ? void 0 : existingUser.id)) {
                 return (0, response_1.buildBadRequestResponse)("No existing user is found. Failed to login");
             }
-            bcrypt_1.default.compare(password, existingUser === null || existingUser === void 0 ? void 0 : existingUser.password, (err, result) => {
-                if (err) {
-                    // Handle error
-                    console.error("Error comparing passwords:", err);
-                    return;
-                }
-                if (result) {
-                    console.log("Passwords match! User authenticated.");
-                    return (0, response_1.buildSuccessRes)("Login successful!", existingUser);
-                }
-                else {
-                    console.log("Passwords do not match! Authentication failed.");
-                    return (0, response_1.buildUnauthenticatedResponse)("Incorrect password/email");
-                }
+            const isMatch = yield bcrypt_1.default.compare(password, existingUser.password);
+            if (isMatch) {
+                console.log("Passwords match! User authenticated.");
+                return (0, response_1.buildSuccessRes)("Login successful!", existingUser);
+            }
+            else {
+                console.log("Passwords do not match! Authentication failed.");
+                return (0, response_1.buildUnauthenticatedResponse)("Incorrect password/email");
+            }
+        });
+    }
+    getAllUsersExceptCurrent(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const users = yield user_model_1.default.find({
+                _id: { $nin: [new mongodb_1.ObjectId(id)] },
             });
+            return (0, response_1.buildSuccessRes)("Users successfully fetched", users);
         });
     }
 }
