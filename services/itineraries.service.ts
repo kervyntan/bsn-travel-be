@@ -94,12 +94,12 @@ export class ItinerariesService {
 
     itinerary?.members.push(new ObjectId(existingUser["_doc"]?._id));
 
-    await ItineraryModel.updateOne({ id: id }, itinerary);
+    await ItineraryModel.updateOne({ _id: id }, itinerary);
   }
 
   // NON-ENDPOINT METHODS
   private async getItineraryById(id: ObjectId) {
-    const itinerary = await ItineraryModel.findOne<Itinerary>({ id: id });
+    const itinerary = await ItineraryModel.findOne<Itinerary>({ _id: id });
 
     if (!itinerary) {
       return null;

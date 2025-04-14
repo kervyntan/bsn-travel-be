@@ -122,9 +122,16 @@ export class UserService {
     console.log("Original Id: ", originalId);
     console.log("Connect With Id: ", connectWithId);
 
-    const originalUser = await userModel.findOne<User>({ id: originalId });
+    const originalUser = await userModel.findOne<User>({
+      _id: new ObjectId(originalId as string),
+    });
 
-    const userToConnect = await userModel.findOne<User>({ id: connectWithId });
+    const userToConnect = await userModel.findOne<User>({
+      _id: new ObjectId(connectWithId as string),
+    });
+
+    console.log("here reached: ", originalUser);
+    console.log("originalUser connections: ", userToConnect);
 
     if (!originalUser || !userToConnect) {
       return buildBadRequestResponse(
@@ -135,7 +142,18 @@ export class UserService {
     originalUser.connections.push(new ObjectId(connectWithId as string));
     userToConnect.connections?.push(new ObjectId(connectWithId as string));
 
-    await userModel.updateOne({ id: originalId }, originalUser);
-    await userModel.updateOne({ id: connectWithId }, userToConnect);
+    await userModel.updateOne(
+      { _id: new ObjectId(originalId as string) },
+      originalUser
+    );
+    await userModel.updateOne(
+      { _id: new ObjectId(connectWithId as string) },
+      userToConnect
+    );
+
+    return buildSuccessRes(
+      "Successfully updated user's connections",
+      originalUser
+    );
   }
 }
