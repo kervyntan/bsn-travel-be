@@ -39,7 +39,31 @@ export class ActivitiesService {
     return buildSuccessRes("Fetched activity", mappedActivity);
   }
 
-  async mapCreatedByToMember(activity: Activity) {
+  async createActivity(req: Request) {
+    const {
+      imageUrl = "",
+      description,
+      createdBy,
+      title,
+      type,
+      bestForHowManyPeople,
+    } = req.body as Activity;
+
+    const activity: Activity = {
+      imageUrl: imageUrl,
+      description: description,
+      title: title,
+      bestForHowManyPeople: bestForHowManyPeople,
+      createdBy: new ObjectId(createdBy),
+      type: type,
+    };
+
+    const createdActivity = await ActivityModel.create<Activity>(activity);
+
+    return await this.mapCreatedByToMember(createdActivity["_doc"] as Activity);
+  }
+
+  private async mapCreatedByToMember(activity: Activity) {
     const createdBy = await userModel.findOne<User>({
       _id: new ObjectId(activity.createdBy),
     });
