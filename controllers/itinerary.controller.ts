@@ -17,6 +17,12 @@ router.post("/join/:id", async (req: Request, res: Response) => {
   res.json(response);
 });
 
+router.post("/", async (req: Request, res: Response) => {
+  const response = await itineraryService.createItinerary(req);
+
+  res.json(response);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   const response = await itineraryService.getAllItineraries();
 

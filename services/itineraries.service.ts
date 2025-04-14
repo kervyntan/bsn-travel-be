@@ -51,7 +51,29 @@ export class ItinerariesService {
     return buildSuccessRes("Fetched all itineraries", returnedItineraries);
   }
 
-  async createItinerary() {}
+  async createItinerary(req: Request) {
+    const {
+      imageUrl = "",
+      description,
+      name,
+      createdBy,
+      members,
+      activities,
+    } = req.body as Itinerary;
+
+    const itineraryToCreate: Itinerary = {
+      imageUrl: imageUrl,
+      description: description,
+      name: name,
+      createdBy: new ObjectId(createdBy),
+      members: members,
+      activities: activities,
+    };
+
+    const itinerary = await ItineraryModel.create<Itinerary>(itineraryToCreate);
+
+    return await this.getItineraryById(itinerary._id);
+  }
 
   async joinItinerary(req: Request) {
     const { id } = req.params;
@@ -73,5 +95,35 @@ export class ItinerariesService {
     itinerary?.members.push(new ObjectId(existingUser["_doc"]?._id));
 
     await ItineraryModel.updateOne({ id: id }, itinerary);
+  }
+
+  // NON-ENDPOINT METHODS
+  private async getItineraryById(id: ObjectId) {
+    const itinerary = await ItineraryModel.findOne<Itinerary>({ id: id });
+
+    if (!itinerary) {
+      return null;
+    }
+
+    const members = await userModel.find<User>({
+      _id: {
+        $in: itinerary.members.map((member) => new ObjectId(member)),
+      },
+    });
+
+    const createdBy = await userModel.findOne<User>({
+      _id: new ObjectId(itinerary.createdBy),
+    });
+
+    const itineraryDto: ItineraryDto = {
+      createdBy: createdBy,
+      members: members,
+      imageUrl: itinerary.imageUrl,
+      description: itinerary.description,
+      name: itinerary.name,
+      activities: itinerary.activities,
+    };
+
+    return buildSuccessRes("Fetched itinerary", itineraryDto);
   }
 }
