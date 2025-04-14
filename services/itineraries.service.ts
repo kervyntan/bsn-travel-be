@@ -3,9 +3,14 @@ import { DUMMY_ITINERARIES } from "../constants/constants";
 import ItineraryModel from "../models/itineraries.model";
 import userModel from "../models/user.model";
 import { Itinerary, ItineraryDto } from "../types/itinerary.dto";
-import { buildSuccessRes } from "../utils/response";
+import {
+  buildBadRequestResponse,
+  buildStatusNotFoundResponse,
+  buildSuccessRes,
+} from "../utils/response";
 import { ObjectId } from "mongodb";
 import { User } from "../types/user.dto";
+import { Request } from "express";
 
 export class ItinerariesService {
   async insertDummyItineraries() {
@@ -47,4 +52,26 @@ export class ItinerariesService {
   }
 
   async createItinerary() {}
+
+  async joinItinerary(req: Request) {
+    const { id } = req.params;
+
+    const { userId } = req.query;
+
+    const itinerary = await ItineraryModel.findOne<Itinerary>({ id: id });
+
+    if (!itinerary) {
+      return buildStatusNotFoundResponse(`No itinerary found with id: ${id}`);
+    }
+
+    const existingUser = await userModel.findOne<User>({ id: userId });
+
+    if (!existingUser?._id) {
+      return buildStatusNotFoundResponse(`No user found with id: ${userId}`);
+    }
+
+    itinerary?.members.push(new ObjectId(existingUser["_doc"]?._id));
+
+    await ItineraryModel.updateOne({ id: id }, itinerary);
+  }
 }

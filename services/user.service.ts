@@ -119,6 +119,9 @@ export class UserService {
   async connectWithUser(req: Request) {
     const { originalId, connectWithId } = req.query;
 
+    console.log("Original Id: ", originalId);
+    console.log("Connect With Id: ", connectWithId);
+
     const originalUser = await userModel.findOne<User>({ id: originalId });
 
     const userToConnect = await userModel.findOne<User>({ id: connectWithId });
@@ -129,14 +132,10 @@ export class UserService {
       );
     }
 
-    const originalUserData = { ...originalUser!["_doc"] } as User;
+    originalUser.connections.push(new ObjectId(connectWithId as string));
+    userToConnect.connections?.push(new ObjectId(connectWithId as string));
 
-    const connectWithUserData = { ...userToConnect!["_doc"] } as User;
-
-    originalUserData.connections.push(new ObjectId(connectWithId as string));
-    connectWithUserData.connections.push(new ObjectId(connectWithId as string));
-
-    await userModel.updateOne({ id: originalId }, originalUserData);
-    await userModel.updateOne({ id: connectWithId }, connectWithUserData);
+    await userModel.updateOne({ id: originalId }, originalUser);
+    await userModel.updateOne({ id: connectWithId }, userToConnect);
   }
 }

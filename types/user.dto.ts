@@ -3,7 +3,7 @@ import { InterestsEnum, LanguagesEnum } from "../enums/enums";
 
 export interface User {
   _id?: string;
-  _doc?: object;
+  _doc?: UserDto;
   name: string;
   email: string;
   password: string;
@@ -14,6 +14,7 @@ export interface User {
 }
 
 export interface UserDto {
+  _id?: string;
   name: string;
   email: string;
   password: string;

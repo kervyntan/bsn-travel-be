@@ -11,6 +11,12 @@ router.post("/create-dummy-data", async (req: Request, res: Response) => {
   res.json({ result: "ok" });
 });
 
+router.post("/join/:id", async (req: Request, res: Response) => {
+  const response = await itineraryService.joinItinerary(req);
+
+  res.json(response);
+});
+
 router.get("/", async (req: Request, res: Response) => {
   const response = await itineraryService.getAllItineraries();
 
