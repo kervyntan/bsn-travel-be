@@ -1,10 +1,8 @@
-import mongoose from "mongoose";
 import { DUMMY_ITINERARIES } from "../constants/constants";
 import ItineraryModel from "../models/itineraries.model";
 import userModel from "../models/user.model";
 import { Itinerary, ItineraryDto } from "../types/itinerary.dto";
 import {
-  buildBadRequestResponse,
   buildStatusNotFoundResponse,
   buildSuccessRes,
 } from "../utils/response";
@@ -47,6 +45,8 @@ export class ItinerariesService {
       })
     );
 
+    returnedItineraries.sort((a, b) => a.name.localeCompare(b.name));
+
     console.log("returnedItineraries: ", returnedItineraries);
     return buildSuccessRes("Fetched all itineraries", returnedItineraries);
   }
@@ -66,7 +66,7 @@ export class ItinerariesService {
       description: description,
       name: name,
       createdBy: new ObjectId(createdBy),
-      members: members,
+      members: members.map((member) => new ObjectId(member)),
       activities: activities,
     };
 

@@ -93,15 +93,22 @@ class UserService {
             const { originalId, connectWithId } = req.query;
             console.log("Original Id: ", originalId);
             console.log("Connect With Id: ", connectWithId);
-            const originalUser = yield user_model_1.default.findOne({ id: originalId });
-            const userToConnect = yield user_model_1.default.findOne({ id: connectWithId });
+            const originalUser = yield user_model_1.default.findOne({
+                _id: new mongodb_1.ObjectId(originalId),
+            });
+            const userToConnect = yield user_model_1.default.findOne({
+                _id: new mongodb_1.ObjectId(connectWithId),
+            });
+            console.log("here reached: ", originalUser);
+            console.log("originalUser connections: ", userToConnect);
             if (!originalUser || !userToConnect) {
                 return (0, response_1.buildBadRequestResponse)("User with OriginalId/ConnectwithId can't be found.");
             }
             originalUser.connections.push(new mongodb_1.ObjectId(connectWithId));
             (_a = userToConnect.connections) === null || _a === void 0 ? void 0 : _a.push(new mongodb_1.ObjectId(connectWithId));
-            yield user_model_1.default.updateOne({ id: originalId }, originalUser);
-            yield user_model_1.default.updateOne({ id: connectWithId }, userToConnect);
+            yield user_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(originalId) }, originalUser);
+            yield user_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(connectWithId) }, userToConnect);
+            return (0, response_1.buildSuccessRes)("Successfully updated user's connections", originalUser);
         });
     }
 }

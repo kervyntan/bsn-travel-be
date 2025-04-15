@@ -130,17 +130,32 @@ export class UserService {
       _id: new ObjectId(connectWithId as string),
     });
 
-    console.log("here reached: ", originalUser);
-    console.log("originalUser connections: ", userToConnect);
-
     if (!originalUser || !userToConnect) {
       return buildBadRequestResponse(
         "User with OriginalId/ConnectwithId can't be found."
       );
     }
 
-    originalUser.connections.push(new ObjectId(connectWithId as string));
-    userToConnect.connections?.push(new ObjectId(connectWithId as string));
+    // Connections exist between each other
+    if (
+      originalUser.connections.includes(
+        new ObjectId(connectWithId as string)
+      ) ||
+      userToConnect.connections.includes(new ObjectId(originalId as string))
+    ) {
+      const originalIdx = originalUser.connections.findIndex(
+        (x) => x == new ObjectId(originalId as string)
+      );
+      const connectWithIdx = userToConnect.connections.findIndex(
+        (x) => x == new ObjectId(connectWithId as string)
+      );
+
+      originalUser.connections.splice(originalIdx, 1);
+      userToConnect.connections.splice(connectWithIdx, 1);
+    } else {
+      originalUser.connections.push(new ObjectId(connectWithId as string));
+      userToConnect.connections?.push(new ObjectId(connectWithId as string));
+    }
 
     await userModel.updateOne(
       { _id: new ObjectId(originalId as string) },
