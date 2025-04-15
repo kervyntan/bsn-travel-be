@@ -116,6 +116,32 @@ export class UserService {
     return buildSuccessRes("Users successfully fetched", users);
   }
 
+  async smartGenerateExceptCurrent(req: Request) {
+    const { id } = req.params;
+
+    const currentUser = await userModel.findOne<User>({
+      _id: new ObjectId(id),
+    });
+
+    const currentUserInterests = currentUser?.interests || [];
+
+    const currentUserLanguages = currentUser?.languages || [];
+
+    console.log("interests: ", currentUserInterests);
+    console.log("languages: ", currentUserLanguages);
+
+    const users = await userModel.find({
+      _id: { $nin: [new ObjectId(id)] },
+      interests: {
+        $not: { $elemMatch: { $nin: currentUserInterests } },
+      },
+      languages: {
+        $not: { $elemMatch: { $nin: currentUserLanguages } },
+      },
+    });
+    return buildSuccessRes("Users successfully fetched", users);
+  }
+
   async connectWithUser(req: Request) {
     const { originalId, connectWithId } = req.query;
 

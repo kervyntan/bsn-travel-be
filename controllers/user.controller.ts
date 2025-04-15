@@ -29,4 +29,10 @@ router.get("/except/:id", async (req: Request, res: Response) => {
   res.json(response);
 });
 
+router.get("/smart-generate/:id", async (req: Request, res: Response) => {
+  const response = await userService.smartGenerateExceptCurrent(req);
+
+  res.json(response);
+});
+
 export default router;
