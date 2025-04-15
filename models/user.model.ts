@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
   connections: [Schema.Types.ObjectId],
+  imageUrl: String,
 });
 
 const userModel = mongoose.model("Users", userSchema);
