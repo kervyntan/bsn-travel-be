@@ -87,6 +87,28 @@ class UserService {
             return (0, response_1.buildSuccessRes)("Users successfully fetched", users);
         });
     }
+    smartGenerateExceptCurrent(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const { id } = req.params;
+            const currentUser = yield user_model_1.default.findOne({
+                _id: new mongodb_1.ObjectId(id),
+            });
+            const currentUserInterests = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.interests) || [];
+            const currentUserLanguages = (currentUser === null || currentUser === void 0 ? void 0 : currentUser.languages) || [];
+            console.log("interests: ", currentUserInterests);
+            console.log("languages: ", currentUserLanguages);
+            const users = yield user_model_1.default.find({
+                _id: { $nin: [new mongodb_1.ObjectId(id)] },
+                interests: {
+                    $not: { $elemMatch: { $nin: currentUserInterests } },
+                },
+                languages: {
+                    $not: { $elemMatch: { $nin: currentUserLanguages } },
+                },
+            });
+            return (0, response_1.buildSuccessRes)("Users successfully fetched", users);
+        });
+    }
     connectWithUser(req) {
         return __awaiter(this, void 0, void 0, function* () {
             var _a;
@@ -99,13 +121,21 @@ class UserService {
             const userToConnect = yield user_model_1.default.findOne({
                 _id: new mongodb_1.ObjectId(connectWithId),
             });
-            console.log("here reached: ", originalUser);
-            console.log("originalUser connections: ", userToConnect);
             if (!originalUser || !userToConnect) {
                 return (0, response_1.buildBadRequestResponse)("User with OriginalId/ConnectwithId can't be found.");
             }
-            originalUser.connections.push(new mongodb_1.ObjectId(connectWithId));
-            (_a = userToConnect.connections) === null || _a === void 0 ? void 0 : _a.push(new mongodb_1.ObjectId(connectWithId));
+            // Connections exist between each other
+            if (originalUser.connections.includes(new mongodb_1.ObjectId(connectWithId)) ||
+                userToConnect.connections.includes(new mongodb_1.ObjectId(originalId))) {
+                const originalIdx = originalUser.connections.findIndex((x) => x == new mongodb_1.ObjectId(originalId));
+                const connectWithIdx = userToConnect.connections.findIndex((x) => x == new mongodb_1.ObjectId(connectWithId));
+                originalUser.connections.splice(originalIdx, 1);
+                userToConnect.connections.splice(connectWithIdx, 1);
+            }
+            else {
+                originalUser.connections.push(new mongodb_1.ObjectId(connectWithId));
+                (_a = userToConnect.connections) === null || _a === void 0 ? void 0 : _a.push(new mongodb_1.ObjectId(connectWithId));
+            }
             yield user_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(originalId) }, originalUser);
             yield user_model_1.default.updateOne({ _id: new mongodb_1.ObjectId(connectWithId) }, userToConnect);
             return (0, response_1.buildSuccessRes)("Successfully updated user's connections", originalUser);

@@ -29,4 +29,8 @@ router.get("/except/:id", (req, res) => __awaiter(void 0, void 0, void 0, functi
     const response = yield userService.getAllUsersExceptCurrent(req);
     res.json(response);
 }));
+router.get("/smart-generate/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield userService.smartGenerateExceptCurrent(req);
+    res.json(response);
+}));
 exports.default = router;

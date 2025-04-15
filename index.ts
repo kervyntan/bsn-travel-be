@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(
   cors({
-    origin: ["https://bsn-travel-fe.vercel.app", "http://localhost:3000"],
+    origin: ["https://bsn-travel-fe.vercel.app", "http://localhost:3000", "http://localhost:3007"],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })

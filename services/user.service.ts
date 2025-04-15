@@ -13,8 +13,7 @@ import { ObjectId } from "mongodb";
 
 export class UserService {
   private readonly SALT_ROUNDS = 10;
-  private readonly DEFAULT_PROFILE_PIC =
-    "https://w7.pngwing.com/pngs/177/551/png-transparent-user-interface-design-computer-icons-default-stephen-salazar-graphy-user-interface-design-computer-wallpaper-sphere.png";
+  private readonly DEFAULT_PROFILE_PIC = "https://imgur.com/a/gHQkASf";
 
   async createUser(req: Request) {
     await validateRequestData(req.body, createUserSchema);
